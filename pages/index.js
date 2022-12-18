@@ -75,7 +75,7 @@ export default function App() {
   const [type, setType] = useState("");
   const [ami, setAmi] = useState("");
   const [password, setPassword] = useState("");
-  const [diskSize, setDiskSize] = useState(8);
+  const [disk, setDisk] = useState("");
   const [userdata, setUserdata] = useState("")
   const [gqRegion, setGqRegion] = useState("");
   const [ciRegion, setCiRegion] = useState("");
@@ -117,9 +117,14 @@ export default function App() {
   }
 
   //Validations
+  function validateDisk() {
+    var validDiskTemplate = /^[0-9]*[1-9][0-9]*$/;
+    return validDiskTemplate.test(disk);
+  }
+
   function validateRemote() {
     if (remote === "/api") {
-      return TextTrackCueList;
+      return true;
     }
     var validRemoteTemplate = /^(http|https?:\/\/)/;
     return validRemoteTemplate.test(remote);
@@ -155,6 +160,11 @@ export default function App() {
     }
     if (password.length < 6) {
       showDialog("无效密码", "请输入6位以上密码后再试一次");
+      setIsLaunchingInstance(false);
+      return;
+    }
+    if (!validateDisk()) {
+      showDialog("无效磁盘空间", "请输入正确的磁盘空间后再试一次");
       setIsLaunchingInstance(false);
       return;
     }
@@ -332,7 +342,7 @@ export default function App() {
                   {
                     DeviceName: "/dev/xvda",
                     Ebs: {
-                      VolumeSize: diskSize
+                      VolumeSize: parseInt(disk)
                     }
                   }
                 ],
@@ -373,6 +383,7 @@ export default function App() {
           system: system,
           type: type,
           password: password,
+          disk: parseInt(disk),
           useProxy: false
         })
       }
@@ -384,6 +395,7 @@ export default function App() {
           system: system,
           type: type,
           password: password,
+          disk: parseInt(disk),
           useProxy: true,
           proxy: proxy
         })
@@ -1103,17 +1115,13 @@ export default function App() {
             }} />
           </FormControl>
         </div>
-        {isShowAdvancedOptions ? (
-          <div>
-            <FormControl sx={{ m: 1, minWidth: 150 }}>
-              <TextField label="Disk Size" variant="outlined" size="small" multiline onChange={(e) => {
-                setDiskSize(parseInt(e.target.value));
-              }} />
-            </FormControl>
-          </div>
-        ) : (
-          <></>
-        )}
+        <div>
+          <FormControl sx={{ m: 1, minWidth: 150 }}>
+            <TextField label="磁盘空间（GB）" variant="outlined" size="small" multiline onChange={(e) => {
+              setDisk(e.target.value);
+            }} />
+          </FormControl>
+        </div>
         {isShowAdvancedOptions ? (
           <div>
             <FormControl sx={{ m: 1, minWidth: 600 }}>
