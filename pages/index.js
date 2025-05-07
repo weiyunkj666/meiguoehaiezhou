@@ -83,9 +83,9 @@ export default function App() {
   const [ami, setAmi] = useState("");
   const [password, setPassword] = useState("weiyunkj");
   const [disk, setDisk] = useState("30");
-  const [userdata, setUserdata] = useState("us-east-2")
-  const [gqRegion, setGqRegion] = useState("us-east-2");
-  const [ciRegion, setCiRegion] = useState("us-east-2");
+  const [userdata, setUserdata] = useState("")
+  const [gqRegion, setGqRegion] = useState("");
+  const [ciRegion, setCiRegion] = useState("");
 
 
   //Interaction States
